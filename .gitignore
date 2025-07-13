@@ -1,0 +1,19 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+ENV/
+env/
+
+# IDE files
+.idea/
+*.iml
+
+# Data / sensitive files
+password.txt
+data.password.json
+
+# Misc
+*.log

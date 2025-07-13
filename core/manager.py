@@ -1,7 +1,9 @@
-
 class Manager:
+    """Manage account entries in memory."""
+
     def __init__(self):
         self.account = []
+        self.last_id = 0
 
     def load_accounts(self, accounts):
         self.account = accounts
@@ -11,7 +13,7 @@ class Manager:
             self.last_id = 0
 
     def add_account(self, account):
-        # Check for duplicate
+        """Add a new account if it doesn't already exist."""
         for acc in self.account:
             if acc.get("site") == account.get("site") and acc.get("username") == account.get("username"):
                 print("Account with this site and username already exists.")
@@ -42,6 +44,4 @@ class Manager:
                 print(f"Password for {site} updated successfully.")
                 return
         print("Account not found. Are you sure you added it?")
-
-
 

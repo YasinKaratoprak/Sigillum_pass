@@ -1,18 +1,21 @@
 import sys
 import os
+import getpass
+
 from core.manager import Manager
 from core.storage import Storage
 from utils.generator import Generator
 
+
 def main():
-    # Password setup/check
-    password_file = 'password.txt'
+    """Entry point for the CLI password manager."""
+    password_file = "password.txt"
     if not os.path.exists(password_file):
         while True:
-            new_password = input("Set a new program password: ")
-            confirm_password = input("Confirm password: ")
+            new_password = getpass.getpass("Set a new program password: ")
+            confirm_password = getpass.getpass("Confirm password: ")
             if new_password == confirm_password and new_password.strip():
-                with open(password_file, 'w') as f:
+                with open(password_file, "w") as f:
                     f.write(new_password)
                 print("Password set successfully.")
                 break
@@ -20,8 +23,8 @@ def main():
                 print("Passwords do not match or empty. Try again.")
     else:
         while True:
-            entered = input("Enter your program password: ")
-            with open(password_file, 'r') as f:
+            entered = getpass.getpass("Enter your program password: ")
+            with open(password_file, "r") as f:
                 saved = f.read().strip()
             if entered == saved:
                 print("Access granted.")
@@ -40,15 +43,22 @@ def main():
     password_view_unlocked = False
 
     while True:
-        print("\n1. Add Account\n2. List Accounts\n3. Remove Account\n4. Generate Password\n5. Password Update\n6. Password Strength Health\n7. Show Passwords\n8. Update Program Password\n9. Exit")
+        print(
+            "\n1. Add Account\n2. List Accounts\n3. Remove Account\n4. Generate Password\n"
+            "5. Password Update\n6. Password Strength Health\n7. Show Passwords\n"
+            "8. Update Program Password\n9. Exit"
+        )
         choice = input("Select an option: ")
 
         if choice == "1":
             site = input("Site: ")
             username = input("Username: ")
-            password = input("Password (leave empty to generate): ")
+            password = getpass.getpass("Password (leave empty to generate): ")
             if not password:
-                print("Password options:\n1. Letters, digits, special\n2. Letters, digits\n3. Letters only\n4. Digits only")
+                print(
+                    "Password options:\n1. Letters, digits, special\n2. Letters, digits\n"
+                    "3. Letters only\n4. Digits only"
+                )
                 opt = input("Select option: ")
                 length = int(input("Password length: "))
                 if opt == "1":
@@ -70,8 +80,10 @@ def main():
 
         elif choice == "2":
             if not password_view_unlocked:
-                check = input("Enter your program password to list accounts: ")
-                with open(password_file, 'r') as f:
+                check = getpass.getpass(
+                    "Enter your program password to list accounts: "
+                )
+                with open(password_file, "r") as f:
                     saved = f.read().strip()
                 if check != saved:
                     print("Incorrect password. Access denied.")
@@ -102,7 +114,10 @@ def main():
                     print("Account not found.")
 
         elif choice == "4":
-            print("Password options:\n1. Letters, digits, special\n2. Letters, digits\n3. Letters only\n4. Digits only")
+            print(
+                "Password options:\n1. Letters, digits, special\n2. Letters, digits\n"
+                "3. Letters only\n4. Digits only"
+            )
             opt = input("Select option: ")
             length = int(input("Password length: "))
             if opt == "1":
@@ -119,7 +134,7 @@ def main():
         elif choice == "5":
             site = input("Site: ")
             username = input("Username: ")
-            new_password = input("New Password: ")
+            new_password = getpass.getpass("New Password: ")
             manager.password_update(site, username, new_password)
             storage.save_accounts(manager.account)
 
@@ -131,14 +146,18 @@ def main():
                 password = account.get("password")
                 if password:
                     strength = generator.check_password_strength(password)
-                    print(f"Site: {site}, Username: {username}, Password Strength: {strength}")
+                    print(
+                        f"Site: {site}, Username: {username}, Password Strength: {strength}"
+                    )
                 else:
                     print(f"Site: {site}, Username: {username}, Password: Not set")
 
         elif choice == "7":
             if not password_view_unlocked:
-                check = input("Enter your program password to view passwords: ")
-                with open(password_file, 'r') as f:
+                check = getpass.getpass(
+                    "Enter your program password to view passwords: "
+                )
+                with open(password_file, "r") as f:
                     saved = f.read().strip()
                 if check != saved:
                     print("Incorrect password. Access denied.")
@@ -146,24 +165,24 @@ def main():
                 password_view_unlocked = True
             print("All account passwords:")
             for account in manager.account:
-                print(f"Site: {account.get('site')}, Username: {account.get('username')}, Password: {account.get('password')}")
+                print(
+                    f"Site: {account.get('site')}, Username: {account.get('username')}, Password: {account.get('password')}"
+                )
 
         elif choice == "8":
-            # Update program password
-            with open(password_file, 'r') as f:
+            with open(password_file, "r") as f:
                 saved = f.read().strip()
-            old = input("Enter your current program password: ")
+            old = getpass.getpass("Enter your current program password: ")
             if old != saved:
                 print("Incorrect password. Password not changed.")
                 continue
             while True:
-                new_password = input("Enter new program password: ")
-                confirm_password = input("Confirm new password: ")
+                new_password = getpass.getpass("Enter new program password: ")
+                confirm_password = getpass.getpass("Confirm new password: ")
                 if new_password == confirm_password and new_password.strip():
-                    with open(password_file, 'w') as f:
+                    with open(password_file, "w") as f:
                         f.write(new_password)
                     print("Program password updated successfully.")
-                    # Reset unlock state for security
                     password_view_unlocked = False
                     break
                 else:
@@ -174,6 +193,7 @@ def main():
             sys.exit(0)
         else:
             print("Invalid choice.")
+
 
 if __name__ == "__main__":
     main()

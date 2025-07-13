@@ -45,7 +45,8 @@ All account data is stored in `data.password.json` in JSON format. The program p
 ## Security Note
 
 - The program password is required to view or list passwords and accounts.
-- Passwords are stored in plain text for simplicity. For real-world use, consider encrypting stored data.
+- Passwords are stored in plain text for simplicity. For real-world use, consider encrypting stored data or using a dedicated secrets manager.
+- The repository's `.gitignore` excludes `password.txt` and `data.password.json` to avoid leaking sensitive information.
 
 ## License
 
